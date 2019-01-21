@@ -50,11 +50,20 @@ function _init()
 
 end
 
+musicstarted = false
+function startmusic()
+	if not musicstarted then
+		music(0, 200)
+		musicstarted = true
+	end
+end
+
 function _update()
 
 	getactivekeys()
 	
 	if activekeys[z_k] then
+		startmusic()
 		growalllimbs()
 	end
 	if activekeys[x_k] then
