@@ -65,12 +65,13 @@ function _update()
 	if activekeys[z_k] then
 		startmusic()
 		growalllimbs()
+		growflowers()
 	end
-	if activekeys[x_k] then
+	if btnd(x_k-1) then
 		bg = cols[ceil(rnd(#cols))]
 		cls(bg)
 		//resetpal()
-		
+		prevflow = {}
 		activelimbs =0
 	end
 	
@@ -78,7 +79,7 @@ function _update()
 		
 		limbs = {}
 		
-		limb = makelimb(rnd(128),rnd(100),rnd(2)-1,rnd(1)-2,0)
+		limb = makelimb(rnd(110)+10,rnd(100)+10,rnd(2)-1,rnd(1)-2,0)
 
 		add(limbs,limb)
 	end
@@ -90,8 +91,15 @@ function _draw()
 	drawalllimbs()
 	draw_debug()
 	
-	rectfill(0,0,10,10,7)
-	print(activelimbs,0,0,0)
+
+//	rectfill(0,0,10,10,7)
+//	print(activelimbs,0,0,0)
+
+//	rectfill(0,0,10,10,bg)
+	//print("press x to grow",0,0,0)
+//	print("press y to change",0,10,0)
+
+
 
 end
 
@@ -243,6 +251,55 @@ function dist (x1,x2,y1,y2)
  	) 	
 end
 
+-->8
+prevflow = {}
+function growflowers()
+	
+	for i = 1,#prevflow do
+		if flr(rnd(150))==3 then
+			local x  = prevflow[i][1]
+			local y = prevflow[i][2]
+			circfill(x,y,1,15)
+			pset(x-1,y-1,14)
+			pset(x+1,y+1,14)
+			pset(x+1,y-1,14)
+			pset(x-1,y+1,14)													
+			del(prevflow,{x,y})
+		 break
+		end
+	end
+	
+
+	local x = rnd(128)
+	local y = rnd(128)
+	local col = pget(x,y)
+
+
+	if (col == 3 or
+	col == 11 or
+	col == 4 )
+	and col != bg then
+		if not pinknearby(x,y) then
+ 		circfill(x,y,1,14)
+ 		add(prevflow,{x,y})
+ 	end
+	end
+	
+end
+
+function pinknearby(x,y)
+	
+	for i = -10, 10 do
+		for j = -10,10 do
+			if pget(x+i,y+j) == 14 then
+				return true
+			end
+		end
+	end
+	
+	return false
+
+end
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -388,3 +445,4 @@ __music__
 00 08424344
 00 07424344
 02 3f424344
+
